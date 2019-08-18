@@ -1,44 +1,35 @@
+package Laboratorio_1;
 
+public class CodingBatRec1 {
 
-/**
- *
- * @author mherreral
- */
-public class CodingBat1 {
-    
-    public static int powerN(int base, int n){
-    if(n ==1) return base;   
-    return base * powerN(base, n-1); 
+    public int powerN(int base, int n){
+        return (n == 1) ? base : base * powerN(base,n - 1);
     }
-    
-    public static int countX(String str){
-    int cont = 0;
-    if(str.length()==0) return 0;
-    if(str.charAt(0)=='x') {
-        cont++;
-    } 
-    cont += countX(str.substring(1, str.length())); 
-    return cont;
+
+    public int countX(String str){
+        int cont = 0;
+        if(str.length() == 0) return 0;
+        if(str.charAt(0) == 'x') { cont++ ;}
+        cont += countX(str.substring(1));
+        return cont;
     }
-    
-    public static int bunnyEars(int conejos){
-    if(conejos==0) return 0;
-    return 2 + bunnyEars(conejos-1); 
+
+    public int bunnyEars(int conejos){
+        return (conejos == 0) ? 0 : 2 + bunnyEars(conejos - 1);
     }
-    
-    public static int count7(int n){
-    int suma = 0;
-    if(n==0) return 0;
-    suma = n%10;
-    n = n/10;
-    if(suma==7) return 1 + count7(n); 
-    return count7(n); 
+
+    public int count7(int n){
+        int suma;
+        if(n == 0) return 0;
+        suma = n % 10;
+        n /= 10;
+        return (suma == 7) ? 1 + count7(n) : count7(n);
     }
-    
-    
-    public static int fibonacci(int n){
-    if(n == 0 || n == 1) return n;
-    return fibonacci(n-2)+fibonacci(n-1);
+
+    public int fibonacci(int n){
+        return (n == 0 || n == 1) ? n : fibonacci(n - 2) + fibonacci(n - 1);
     }
-    
+
 }
+
+
