@@ -31,9 +31,9 @@ public class CodingBatRec2 {
                 || groupNoAdj(start + 1, nums, target);
     }
 
-    public static boolean splitArray(int[] nums) { return splitArrayAux(nums, 0, 0, 0) ;}
+    public boolean splitArray(int[] nums) { return splitArrayAux(nums, 0, 0, 0) ;}
 
-    private static boolean splitArrayAux(int[] nums, int indice, int suma1, int suma2){
+    private boolean splitArrayAux(int[] nums, int indice, int suma1, int suma2){
 
         return (indice > nums.length - 1) ? suma1 == suma2
                 : splitArrayAux(nums, indice + 1, suma1 + nums[indice], suma2)
@@ -41,9 +41,9 @@ public class CodingBatRec2 {
     }
 
 
-    public static boolean splitOdd10(int[] nums) { return splitOdd10Aux( nums,0, 0, 0) ;}
+    public boolean splitOdd10(int[] nums) { return splitOdd10Aux( nums,0, 0, 0) ;}
 
-    private static boolean splitOdd10Aux(int[] nums, int start, int suma1, int suma2) {
+    private boolean splitOdd10Aux(int[] nums, int start, int suma1, int suma2) {
 
         return (start > nums.length - 1) ? suma1 % 10 == 0 && suma2 % 2 == 1
                 || suma1 % 2 == 1 && suma2 % 10 == 0
