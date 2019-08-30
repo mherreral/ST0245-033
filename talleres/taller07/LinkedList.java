@@ -18,7 +18,12 @@ public class LinkedList {
     }
 
     public boolean vacio(Nodo nodo) throws NullPointerException {
+        try{
         return (nodo == null);
+        }
+        catch (Exception e){
+            System.out.println("No apuntas a nada");
+        }
     }
 
     public boolean contiene(int caracter) {
@@ -42,6 +47,7 @@ public class LinkedList {
     }
 
     private Nodo getDato(int indice) throws NullPointerException {
+        try{
         if (vacio(cabeza) || indice < 0) {
             return null;
         } else {
@@ -52,14 +58,28 @@ public class LinkedList {
             }
             return puntero;
         }
+      }
+        catch (Exception e){
+            System.out.println("No apuntas a nada");
+        }
     }
 
     public int getPos(int i) throws NullPointerException {
+        try{
         return getPos(cabeza, i);
+        }
+        catch (Exception e){
+            System.out.println("No apuntas a nada");
+        }
     }
 
     private int getPos(Nodo cabeza, int i) throws NullPointerException {
+        try{
         return (i <= 0) ? cabeza.dato : getPos(cabeza.siguiente, i - 1);
+        }
+        catch (Exception e){
+            System.out.println("No apuntas a nada");
+        }
     }
 
     //*******************
@@ -67,14 +87,20 @@ public class LinkedList {
     // ***** Añadir *****
 
     public void añadirPrimero(int dato) throws NullPointerException {
+        try{
         Nodo nodo = new Nodo(dato);
         if (vacio(cabeza)) cabeza = nodo;
         nodo.siguiente = cabeza;
         cabeza = nodo;
         this.tamaño++;
+        }
+        catch (Exception e){
+            System.out.println("No apuntas a nada");
+        }
     }
 
     public void añadirUltimo(int dato) throws NullPointerException {
+        try{
         Nodo nodo = new Nodo(dato);
         if (vacio(cabeza)) cabeza = nodo;
         Nodo puntero = cabeza;
@@ -83,9 +109,14 @@ public class LinkedList {
         }
         puntero.siguiente = nodo;
         this.tamaño++;
+        }
+        catch (Exception e){
+            System.out.println("No apuntas a nada");
+        }
     }
 
     public void añadir(int dato, int indice) throws NullPointerException {
+        try{
         if (indice >= 0) {
             Nodo nodo = new Nodo(dato);
             if (vacio(cabeza)) cabeza = nodo;
@@ -100,6 +131,10 @@ public class LinkedList {
             }
             this.tamaño++;
         }
+      }
+        catch (Exception e){
+            System.out.println("No apuntas a nada");
+        }
     }
 
     // ******************
@@ -107,15 +142,21 @@ public class LinkedList {
     // **** Eliminar ****
 
     public void eliminarPrimero() throws NullPointerException {
+        try{
         if (!vacio(cabeza)) {
             Nodo aux = cabeza;
             cabeza = cabeza.siguiente;
             aux.siguiente = null;
             this.tamaño--;
         }
+      }
+        catch (Exception e){
+            System.out.println("No apuntas a nada");
+        }
     }
 
     public void eliminarUltimo() throws NullPointerException {
+        try{
         if (!vacio(cabeza)) {
             if (cabeza.siguiente == null) cabeza = null;
             Nodo aux = cabeza;
@@ -125,10 +166,14 @@ public class LinkedList {
             aux.siguiente = null;
             this.tamaño--;
         }
-
+      }
+        catch (Exception e){
+            System.out.println("No apuntas a nada");
+        }
     }
 
     public void eliminar(int indice) throws NullPointerException {
+        try{
         if (!vacio(cabeza)) {
             if (indice == 0) {
                 eliminarPrimero();
@@ -143,8 +188,10 @@ public class LinkedList {
             }
             this.tamaño--;
         }
-
-
+       }
+        catch (Exception e){
+            System.out.println("No apuntas a nada");
+        }
     }
 
     // ******************
