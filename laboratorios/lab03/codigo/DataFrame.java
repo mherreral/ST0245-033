@@ -1,112 +1,52 @@
 package Laboratorio_3;
 
+import org.jetbrains.annotations.NotNull;
 
-import java.io.*;
-import java.util.ArrayList;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
-/**
- * @author Samuel Palacios Bernate
- * @version 1.0
- */
-public class DataFrame {
+class DataFrame {
 
-    static String nomFichero;
-    static String formato = "STATION\t\t\tSTATION_NAME\t\tDATE"
-            + "\t\tPRCP\t\tTAVG\t\tTMAX\t\tTMIN"
-            + "\n---------------------------------"
-            + "----------------------------------"
-            + "----------------------------------"
-            + "------------------";
-
-    /**
-     * Imprime el fichero seleccionado por consola.
-     *
-     * @param lista Un ArrayList de Datos.
-     */
-    public static void escribirFichero(ArrayList<Dato> lista) {
-        System.out.println(formato);
-        lista.forEach(
-                (elemento) -> {
-                    System.out.println(elemento);
-                });
-    }
-
-    /**
-     * Guarada un archivo txt como persistencia de un fichero seleccionado y
-     * procesado.
-     *
-     * @param lista Un ArrayList de Datos.
-     * @param ruta  Ruta en la cual se guardará el fichero.
-     */
-    public static void escribirFichero(ArrayList<Dato> lista, String ruta) {
-        FileWriter fileWriter;
-        PrintWriter printWriter;
-        try {
-            fileWriter = new FileWriter(ruta);
-            printWriter = new PrintWriter(fileWriter);
-            printWriter.println(formato);
-            lista.forEach(
-                    (elemento) -> {
-// String nombre, int codigo, String codMateria, int semestre, int grupo, String descEvaluacion, int porcentaje,
-// String descripcion, String nomMateria, int nota, int notaDefinitiva
-                        printWriter.println(String.valueOf(
-                                elemento.getNombre() + "\t\t" + elemento.getCodigo() + "\t\t"
-                                        + elemento.getCodMateria() + "\t\t" + elemento.getCodMateria() + "\t\t"
-                                        + elemento.getSemestre() + "\t\t" + elemento.getGrupo() + "\t\t"
-                                        + elemento.getDescEvaluacion() + "\t\t" + elemento.getPorcentaje() + "\t\t"
-                                        + elemento.getDescripcion() + "\t\t" + elemento.getNomMateria() + "\t\t"
-                                        + elemento.getNota() + "\t\t" + elemento.getNotaDefinitiva()));
-                    });
-            printWriter.close();
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-
-    }
-
-    /**
-     * Lee un archivo CSV y lo procesa para su optimo manejo.
-     *
-     * @param nomFichero  nombre del fichero con su extención
-     * @param pathFichero Ruta donde se aloja elfichero.
-     * @return Retorna un ArrayList de Dato con la información del fichero.
-     * @throws NumberFormatException Cuando hay algún error al convertir los
-     *                               tipos de datos.
-     */
-    public static ArrayList<Dato> leerFichero(String nomFichero, String pathFichero) {
-        ArrayList<Dato> lista = new ArrayList<>();
-
-        Dato dato;
-
+    @NotNull
+    static LinkedList<Estudiante> leerfichero(String fichero) {
+        LinkedList<Estudiante> lista = new LinkedList<>();
+        Estudiante estudiante;
+        String linea, aux = "";
         try {
 
-            File file = new File(pathFichero, nomFichero);
-            try (Scanner scFichero = new Scanner(file)) {
-                String linea = scFichero.nextLine();
+            File file = new File("./src/Laboratorio_3", fichero);
+            try (Scanner in = new Scanner(file)) {
+                in.nextLine();
 
-                while (scFichero.hasNext()) {
-                    linea = procesarCadena(scFichero.nextLine());
+                while (in.hasNext()) {
+                    in.nextLine();
+                    linea = procesarLinea(in.nextLine());
 
                     StringTokenizer token = new StringTokenizer(linea, ",");
 
-                    dato = new Dato();
+                    estudiante = new Estudiante();
                     // String nombre, int codigo, String codMateria, int semestre, String grupo, String descEvaluacion,
                     // int porcentaje, String descripcion, String nomMateria, float nota, float notaDefinitiva
-                    dato.setNombre(token.nextToken());
-                    dato.setCodigo(Integer.parseInt(token.nextToken()));
-                    dato.setCodMateria(token.nextToken());
-                    dato.setSemestre(Integer.parseInt(token.nextToken()));
-                    dato.setGrupo(Integer.parseInt(token.nextToken()));
-                    dato.setDescEvaluacion(token.nextToken());
-                    dato.setPorcentaje(Integer.parseInt(token.nextToken()));
-                    dato.setDescripcion(token.nextToken());
-                    dato.setNomMateria(token.nextToken());
-                    dato.setNota(Integer.parseInt(token.nextToken()));
-                    dato.setNotaDefinitiva(Integer.parseInt(token.nextToken()));
+                    estudiante.setNombre(token.nextToken());
+                    if (!estudiante.getNombre().equals(aux)) {
+                        aux = estudiante.getNombre();
+                        estudiante.setCodigo(token.nextToken());
+                        token.nextToken();
+                        estudiante.setSemestre(Integer.parseInt(token.nextToken()));
+                        token.nextToken();
+                        token.nextToken();
+                        token.nextToken();
+                        token.nextToken();
+                        estudiante.setCurso(token.nextToken());
+                        token.nextToken();
+                        estudiante.setNota(Integer.parseInt(token.nextToken()));
 
-                    lista.add(dato);
+
+                        lista.addLast(estudiante);
+                    }
                 }
             }
         } catch (FileNotFoundException e) {
@@ -119,22 +59,22 @@ public class DataFrame {
         return lista;
     }
 
-    /**
-     * Procesa las cadenas del fichero CSV para que sean más fáciles de
-     * manipular.
-     *
-     * @param cadena Una cadena de texto.
-     * @return Una cadena de texto procesada y optimizada.
-     */
-    public static String procesarCadena(String cadena) {
+    static void escribirFichero(@NotNull LinkedList<Estudiante> lista) {
+        for (Estudiante elemento : lista) {
+            System.out.println(elemento);
+        }
+    }
 
-        cadena = cadena.replace(",,,", ",");
-        cadena = cadena.replace(",,", ",");
-        cadena = cadena.replace("\"", "");
-        // cadena = cadena.replace("-", "");
-        cadena = cadena.replace("  ", " ");
+    @NotNull
+    private static String procesarLinea(String linea) {
 
-        return cadena;
+        linea = linea.replace(",,,", ",");
+        linea = linea.replace(",,", ",");
+        linea = linea.replace("\"", "");
+        linea = linea.replace("  ", " ");
+        return linea;
+
+
     }
 
 }
