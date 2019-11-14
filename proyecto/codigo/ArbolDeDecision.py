@@ -1,37 +1,45 @@
 import pandas as pd
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.tree import export_graphviz
+from time import time
 
+#now we import the dataset
+from sklearn.metrics import accuracy_score
+from sklearn.tree import DecisionTreeClassifier, export_graphviz
 
-data = pd.read_csv('./data_set_balanced.csv') # Aquí se lee el data_set
+start_time: float = time()
+dataset_forTraining = pd.read_csv('~/PycharmProjects/arbol/data_set_train.csv')
+dataset_Test = pd.read_csv('~/PycharmProjects/arbol/data_set_balanced.csv')
 
-print(data.count(0) / data.shape[0] * 100) # Esto imprime el porcentaje de datos que hay en cada columna (100% significa que no hay datos vacios)
+cols = list(dataset_forTraining)
 
-print("\n", data.groupby('label').label.count()) # Imprime la que cantidad de datos contienen un valor de label
+#here we define our independent variables
+cols.remove('label')
 
-features = ['ph', 'soil_temperature', 'soil_moisture', 'illuminance',
-            'env_temperature', 'env_humidity']                          # Variables independientes
+x = dataset_forTraining[cols].values #we store our independent values
+y = dataset_forTraining['label'].values #we store our depdendent values
+xTest = dataset_Test[cols]
+yTest = dataset_Test['label'].values
 
-X = data[features].values # Se almacenan los valores de las variables independientes
+    #building the classifier
+def training(x, y, xTest, yTest) :
+    cls = DecisionTreeClassifier(criterion='gini', random_state=0, max_depth=10, min_samples_leaf=5)
 
-y = data['label'].values # Se almacenan los valores de la variable dependiente
+    #training the tree
+    cls.fit(x, y)
+    DecisionTreeClassifier(class_weight=0, criterion='gini', max_depth= None, min_impurity_decrease=0.0,
+                           min_impurity_split=None, min_samples_leaf=9, min_samples_split=2, min_weight_fraction_leaf=0.0,
+                           presort=False, random_state=0, splitter='best')
+    #predictiong with the test
+    ypred = cls.predict(xTest)
+    print(ypred)
 
-#X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=100)
+    print(accuracy_score(yTest, ypred) * 100)
 
-clf = DecisionTreeClassifier(criterion="gini", random_state=100, max_depth=5, min_samples_leaf=5)
-# Esto genera el árbol con una frofundidad de maximo 5 niveles o un criterio de minimo 5 datos para dejar de generar nodos
+    final_time = time()-start_time
+    #print(final_time)
+    with open("tree_income.txt", "w") as f:
+       f = export_graphviz(cls, out_file=f, feature_names=cols)
 
-clf.fit(X, y) # Esto lo entrena
+def main() :
+    training(x, y, xTest, yTest)
 
-
-#Esto genera un archivo txt que posteriormente se usa para graficar el arbol en la pagina http://www.webgraphviz.com/
-with open("tree_income.txt", "w") as f:
-    f = export_graphviz(clf, out_file=f, feature_names=features)
-
-# Aquí se predice un valor dada una entrada (Inestable)
-
-#X_toPred = input('¿Qué deseas Clasificar?\n')
-
-#y_pred = clf.predict(X_toPred)
-
-#y2_pred = clf.predict_proba(X_toPred)
+main()
